@@ -2,9 +2,10 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = 'us-east-1'
+        AWS_REGION = 'us-east-2'
         IMAGE_NAME = 'simple-java-app'
         ECR_REPO = '123456789012.dkr.ecr.us-west-2.amazonaws.com/simple-java-app'
+        MANIFEST_REPO = 'git@github.com:my-repo/manifest.git'
     }
 
     stages {
