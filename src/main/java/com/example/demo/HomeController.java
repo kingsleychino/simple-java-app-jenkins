@@ -53,4 +53,14 @@ public class HomeController {
                </html>
                """;
     }
+
+    @GetMapping("/healthz")
+    public String healthz() {
+        return "OK";
+    }
+
+    @GetMapping("/ready")
+    public String ready() {
+        return "READY";
+    }
 }
