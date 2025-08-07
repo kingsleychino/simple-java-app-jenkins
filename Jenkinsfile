@@ -1,27 +1,64 @@
-def tomcatServerUrl = "http://172.31.14.95"
 pipeline {
-    agent {
-        node {
-            label 'jenkins-slave'
-        }
+    agent any
+
+    tools {
+        maven 'Maven 3.8.6' // Ensure this version is configured in Jenkins
+        jdk 'JDK 11'      // Ensure this JDK version is configured in Jenkins
     }
 
     stages {
+        stage('Checkout') {
+            steps {
+                // Checkout code from SCM
+                checkout scm
+            }
+        }
+
         stage('Build') {
             steps {
-                // RUN THE MAVEN BUILD
-                sh '"mvn" -Dmaven.test.failure.ignore clean install'
+                // Build the project using Maven
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run unit tests
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package') {
+            steps {
+                // Package the application
+                sh 'mvn package'
             }
         }
 
         stage('Deploy') {
             steps {
-                // DEPLOY WAR ON TOMCAT SERVER
-                deploy adapters: [tomcat8(url: "${tomcatServerUrl}",
-                    credentialsId: 'tomcat-credentials')],
-                war: 'target/*.war',
-                contextPath: 'pipeline-app'
+                // Simple deployment example
+                sh 'echo "Deploying application..."'
+                // Example of copying artifacts to a deploy location
+                sh 'cp target/basic-java-app-1.0-SNAPSHOT.jar /path/to/deploy/'
             }
+        }
+    }
+
+    post {
+        always {
+            // Clean up actions
+            sh 'echo "Cleaning up..."'
+        }
+
+        success {
+            // Actions on successful build
+            echo 'Build succeeded!'
+        }
+
+        failure {
+            // Actions on failed build
+            echo 'Build failed!'
         }
     }
 }
