@@ -1,64 +1,51 @@
 pipeline {
     agent any
-
+    
     tools {
-        maven 'Maven 3.8.6' // Ensure this version is configured in Jenkins
-        jdk 'JDK 11'      // Ensure this JDK version is configured in Jenkins
+        // Make sure Maven and JDK are installed and configured in Jenkins
+        maven 'Maven-3.9.6'  // Name as configured in Jenkins global tool config
+        jdk 'JDK-17'         // Name as configured in Jenkins global tool config
     }
-
+    
     stages {
+        
         stage('Checkout') {
             steps {
-                // Checkout code from SCM
-                checkout scm
+                git branch: 'main', url: 'https://github.com/username/repo-name.git'
             }
         }
-
+        
         stage('Build') {
             steps {
-                // Build the project using Maven
                 sh 'mvn clean install'
             }
         }
-
+        
         stage('Test') {
             steps {
-                // Run unit tests
                 sh 'mvn test'
             }
         }
-
+        
         stage('Package') {
             steps {
-                // Package the application
                 sh 'mvn package'
             }
         }
-
-        stage('Deploy') {
+        
+        stage('Archive Artifact') {
             steps {
-                // Simple deployment example
-                sh 'echo "Deploying application..."'
-                // Example of copying artifacts to a deploy location
-                sh 'cp target/basic-java-app-1.0-SNAPSHOT.jar /path/to/deploy/'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
     }
-
+    
     post {
-        always {
-            // Clean up actions
-            sh 'echo "Cleaning up..."'
-        }
-
         success {
-            // Actions on successful build
-            echo 'Build succeeded!'
+            echo '✅ Build completed successfully!'
         }
-
         failure {
-            // Actions on failed build
-            echo 'Build failed!'
+            echo '❌ Build failed!'
         }
     }
 }
