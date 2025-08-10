@@ -11,7 +11,7 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/username/repo-name.git'
+                git branch: 'main', url: 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
             }
         }
         
@@ -33,11 +33,12 @@ pipeline {
             }
         }
         
+        /*
         stage('Archive Artifact') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
-        }
+        } */
     }
     
     post {
