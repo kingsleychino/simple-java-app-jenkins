@@ -2,9 +2,7 @@ pipeline {
     agent any
     
     tools {
-        // Make sure Maven and JDK are installed and configured in Jenkins
-        maven 'Maven3'  // Name as configured in Jenkins global tool config
-        //jdk 'JDK-17'          Name as configured in Jenkins global tool config
+        maven 'Maven3'  
     }
     
     stages {
@@ -33,12 +31,6 @@ pipeline {
             }
         }
         
-        /*
-        stage('Archive Artifact') {
-            steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
-        } */
     }
     
     post {
