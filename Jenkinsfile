@@ -34,7 +34,7 @@ pipeline {
                 // Assuming a Maven project, adjust for Gradle or other build tools
                 sh 'mvn clean package -DskipTests' 
             }
-        } 
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -43,8 +43,6 @@ pipeline {
                 }
             }
         }
-
-        sta
 
         stage('Push to ECR') {
             steps {
