@@ -1,5 +1,12 @@
 pipeline {
     agent any
+
+    environment {
+        ECR_REPOSITORY_URI = "503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app"
+        AWS_REGION = "us-east-1"
+        AWS_CREDENTIALS_ID = "aws-creds"
+        IMAGE_TAG = "latest"
+    }
     
     tools {
         maven 'Maven3'  
@@ -9,16 +16,37 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
+                //git branch: 'main', url: 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
+                git 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
             }
         }
         
-        stage('Build') {
+        stage('Build Java App') {
             steps {
                 sh 'mvn clean install'
             }
         }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.build("${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER}")
+                }
+            }
+        }
+
+        stage('Push to ECR') {
+            steps {
+                script {
+                    withAWS(credentials: AWS_CREDENTIALS_ID, region: AWS_REGION) {
+                        sh "aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPOSITORY_URI}"
+                        sh "docker push ${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER}"
+                    }
+                }
+            }
+        }
         
+        /*
         stage('Test') {
             steps {
                 sh 'mvn test'
@@ -29,16 +57,25 @@ pipeline {
             steps {
                 sh 'mvn package'
             }
-        }
+        } */
         
     }
     
+    /*
     post {
         success {
             echo '✅ Build completed successfully!'
         }
         failure {
             echo '❌ Build failed!'
+        }
+    }
+    */
+
+    post {
+        always {
+            // Clean up Docker images to save space (optional)
+            sh "docker rmi ${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER} || true"
         }
     }
 }
