@@ -22,20 +22,19 @@ pipeline {
             }
         }
         
-        /*
         stage('Build Java App') {
             steps {
                 sh 'mvn clean install'
             }
         }
-        */
 
+        /*
         stage('Build Java App') {
             steps {
                 // Assuming a Maven project, adjust for Gradle or other build tools
                 sh 'mvn clean package -DskipTests' 
             }
-        }
+        } */
 
         stage('Build Docker Image') {
             steps {
