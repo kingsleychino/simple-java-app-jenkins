@@ -2,10 +2,12 @@ pipeline {
     agent any
 
     environment {
-        ECR_REPOSITORY_URI = "503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app"
-        AWS_REGION = "us-east-1"
-        AWS_CREDENTIALS_ID = "aws-creds"
-        IMAGE_TAG = "latest"
+        // Replace with your ECR repository URI
+        ECR_REPOSITORY_URI = '503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app
+        // Replace with your ECR region
+        AWS_REGION = 'us-east-1'
+        // Replace with your AWS credentials ID in Jenkins
+        AWS_CREDENTIALS_ID = 'aws-creds'
     }
     
     tools {
@@ -17,13 +19,21 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
-                //git 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
             }
         }
         
+        /*
         stage('Build Java App') {
             steps {
                 sh 'mvn clean install'
+            }
+        }
+        */
+
+        stage('Build Java App') {
+            steps {
+                // Assuming a Maven project, adjust for Gradle or other build tools
+                sh 'mvn clean package -DskipTests' 
             }
         }
 
@@ -34,6 +44,8 @@ pipeline {
                 }
             }
         }
+
+        sta
 
         stage('Push to ECR') {
             steps {
