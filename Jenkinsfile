@@ -16,8 +16,8 @@ pipeline {
         
         stage('Checkout') {
             steps {
-                //git branch: 'main', url: 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
-                git 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
+                git branch: 'main', url: 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
+                //git 'https://github.com/kingsleychino/simple-java-app-jenkins.git'
             }
         }
         
