@@ -2,12 +2,7 @@ pipeline {
     agent any
 
     environment {
-        // Replace with your ECR repository URI
-        ECR_REPOSITORY_URI = '503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app'
-        // Replace with your ECR region
-        AWS_REGION = 'us-east-1'
-        // Replace with your AWS credentials ID in Jenkins
-        AWS_CREDENTIALS_ID = 'aws-creds'
+        registry = "503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app"
     }
     
     tools {
@@ -36,10 +31,19 @@ pipeline {
             }
         }
 
+        /*
         stage('Build Docker Image') {
             steps {
                 script {
                     docker.build("${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER}")
+                }
+            }
+        } */
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    dockerImage = docker.build registry
                 }
             }
         }
