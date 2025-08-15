@@ -32,12 +32,4 @@ pipeline {
             }
         }
 
-        
-
-    post {
-        always {
-            // Clean up Docker images to save space (optional)
-            sh "docker rmi ${ECR_REPOSITORY_URI}:${env.BUILD_NUMBER} || true"
-        }
-    }
 }
