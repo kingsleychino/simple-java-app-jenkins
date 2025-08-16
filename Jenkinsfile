@@ -31,6 +31,15 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Push') {
+            steps {
+                script {
+                    sh 'aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app'
+                    sh 'docker push 503499294473.dkr.ecr.us-east-1.amazonaws.com/simple-java-app:latest'
+                }
+            }
+        }
     }
 
 }
